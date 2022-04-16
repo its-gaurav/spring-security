@@ -27,11 +27,4 @@ public class StudentRestController {
                 .orElseThrow(() -> new IllegalStateException("Student " + studentId + " does not exist"));
     }
 
-    @PostMapping()
-    public Student addStudent(@RequestBody Student student){
-        int lastId = STUDENTS.get(STUDENTS.size()-1).getId();
-        STUDENTS.add(new Student(lastId+1, student.getName()));
-        return STUDENTS.get(STUDENTS.size()-1);
-    }
-
 }

@@ -6,13 +6,13 @@ public enum UserPermission {
     COURSE_READ("course:read"),
     COURSE_WRITE("course:write");
 
-    private final String description;
+    private final String permission;
 
-    UserPermission(String description) {
-        this.description = description;
+    UserPermission(String permission) {
+        this.permission = permission;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPermission() {
+        return permission;
     }
 }

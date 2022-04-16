@@ -1,17 +1,18 @@
 package demo.security.enums;
 
-import jdk.nashorn.internal.ir.SetSplitState;
-import org.springframework.util.CollectionUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static demo.security.enums.UserPermission.*;
 
 public enum UserRole {
     STUDENT(new HashSet<>()),
-    ADMIN(new HashSet<>(Arrays.asList(UserPermission.COURSE_READ, UserPermission.COURSE_WRITE,
-            UserPermission.STUDENT_READ, UserPermission.STUDENT_WRITE)));
+    ADMIN(new HashSet<>(Arrays.asList(COURSE_READ, COURSE_WRITE,
+            STUDENT_READ, STUDENT_WRITE))),
+    ADMINTRAINEE(new HashSet<>(Arrays.asList(COURSE_READ,
+            STUDENT_READ)));
 
     private final HashSet<UserPermission> permissions;
 
@@ -21,5 +22,16 @@ public enum UserRole {
 
     public HashSet<UserPermission> getPermissions() {
         return permissions;
+    }
+
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities(){
+        Set<SimpleGrantedAuthority> authorities = getPermissions()
+                .stream().map(permission ->
+                        new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toSet());
+
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+
+        return authorities;
     }
 }
