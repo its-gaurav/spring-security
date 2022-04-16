@@ -1,6 +1,8 @@
 package demo.security.controllers;
 
 import demo.security.dto.Student;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -20,10 +22,12 @@ public class ManagementController {
     ));
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_ADMINTRAINEE')")
     public List<Student> getAllStudents(){
         return STUDENTS;
     }
     @PostMapping()
+    @PreAuthorize("hasAuthority('student:write')")
     public Student registerStudent(@RequestBody Student student){
         System.out.println("registerStudent");
         int lastId = STUDENTS.get(STUDENTS.size()-1).getId();
@@ -32,6 +36,7 @@ public class ManagementController {
     }
 
     @PutMapping("{studentId}")
+    @PreAuthorize("hasAuthority('student:write')")
     public void updateStudent(@PathVariable("studentId") Integer studentId,
                                  @RequestBody Student student){
         System.out.println("updateStudent");
